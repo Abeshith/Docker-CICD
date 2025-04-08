@@ -1,22 +1,28 @@
-##stage 1
+## Stage 1: Build
 FROM python:3.9 as builder
 
 WORKDIR /app
 
 COPY . .
 
-RUN pip install flask pytest
+# Install dependencies into a target directory we'll copy later
+RUN pip install --upgrade pip
+RUN pip install --prefix=/install flask pytest
 
+# Optional: Run tests
 RUN pytest
 
-## stage 2
+## Stage 2: Distroless
 FROM gcr.io/distroless/python3
 
 WORKDIR /app
 
+# Copy installed dependencies
+COPY --from=builder /install /usr/local
+
+# Copy application code
 COPY --from=builder /app /app
 
 EXPOSE 5000
 
 CMD ["app.py"]
-
