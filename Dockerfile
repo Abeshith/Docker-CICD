@@ -1,5 +1,5 @@
 ##stage 1
-FROM python:3.8-slim as builder
+FROM python:3.9 as builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ RUN pip install flask pytest
 RUN pytest
 
 ## stage 2
-FROM gcr.io/distroless/python3:3.8
+FROM gcr.io/distroless/python3
 
 WORKDIR /app
 
